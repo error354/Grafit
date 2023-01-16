@@ -44,12 +44,12 @@ const addWarning = (warningId: string) => {
   }
 };
 
-const calcMinDate = (day:Day) => {
+const calcMinDate = (day: Day) => {
   const minDate = new Date(day.date.getFullYear(), day.date.getMonth(), 1);
   return minDate;
 };
 
-const calcMaxDate = (day:Day) => {
+const calcMaxDate = (day: Day) => {
   const maxDate = new Date(day.date.getFullYear(), day.date.getMonth() + 1, 0);
   return maxDate;
 };
@@ -159,6 +159,10 @@ const calcDaysInWeek = (day: Day) => {
         {{ warning.message }}
       </div>
     </div>
+    <footer>
+      <span class="icon-settings" v-wave></span>
+      <span class="icon-refresh" v-wave></span>
+    </footer>
   </main>
 </template>
 
@@ -171,6 +175,34 @@ main {
   flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: center;
+}
+
+footer {
+  width: 100%;
+  height: 50px;
+  position: fixed;
+  bottom: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: space-around;
+  align-items: stretch;
+  align-content: stretch;
+  border-top: 1px solid #cbd5e0;
+  font-size: 30px;
+}
+
+footer span {
+  display: block;
+  flex: 1;
+  height: 100%;
+  line-height: 50px;
+  text-align: center;
+  cursor: pointer;
+}
+
+footer span:not(:first-child) {
+  border-left: 1px solid #cbd5e0;
 }
 
 .settings {
