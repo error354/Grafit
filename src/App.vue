@@ -336,12 +336,12 @@ input:focus {
 
 .slide-fade-enter-from,
 .slide-fade-leave-to {
-  transform: translateY(50px);
-  opacity: 0;
+  transform: translateY(100%);
+  opacity: 0.7;
 }
 
 .toggle-container {
-  margin-right: 8px;
+  margin-right: 10px;
 }
 
 .vc-container {
