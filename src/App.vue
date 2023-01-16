@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import Toggle from '@vueform/toggle'
 
-const maxHours = ref<number>(168);
-const shiftHours = ref<number>(10);
-const maxDaysInWeek = ref<number>(4);
+const maxHours = ref(168);
+const shiftHours = ref(10);
+const maxDaysInWeek = ref(4);
+const enableMondays = ref(false)
 
 const hoursLeft = computed(() =>
   Math.max(0, maxHours.value - shiftHours.value * selected.value.length)
@@ -106,6 +108,12 @@ const calcDaysInWeek = (day: Day) => {
   );
   return (daysBetween as Array<Day>).length;
 };
+
+const resetSelected = () => {
+  selected.value = [];
+};
+
+const settingsVisible = ref(false);
 </script>
 
 <template>
@@ -122,29 +130,9 @@ const calcDaysInWeek = (day: Day) => {
           :value="maxHours"
         />
       </div>
-      <div class="row">
-        <label for="shift-hours">Długość zmiany w godzinach</label>
-        <input
-          type="number"
-          name="shift-hours"
-          min="1"
-          max="72"
-          :value="shiftHours"
-        />
-      </div>
-      <div class="row">
-        <label for="max-days-in-week">Max dni w ciągu tygodnia</label>
-        <input
-          type="number"
-          name="max-days-in-week"
-          min="1"
-          max="7"
-          :value="maxDaysInWeek"
-        />
-      </div>
     </div>
     <span class="hours-left"
-      >Do zaplanowania pozostało {{ hoursLeft }} godzin.</span
+      >Do zaplanowania pozostało <b>{{ hoursLeft }}</b> godzin.</span
     >
     <v-calendar
       :attributes="attributes"
@@ -160,12 +148,51 @@ const calcDaysInWeek = (day: Day) => {
       </div>
     </div>
     <footer>
-      <span class="icon-settings" v-wave></span>
-      <span class="icon-refresh" v-wave></span>
+      <span class="icon-settings" v-wave @click="settingsVisible = true"></span>
+      <span class="icon-refresh" v-wave @click="resetSelected"></span>
     </footer>
   </main>
+  <transition name="fade">
+    <div
+      class="overlay"
+      @click="settingsVisible = false"
+      v-show="settingsVisible"
+    ></div>
+  </transition>
+  <transition name="slide-fade">
+    <div class="settings-modal" v-show="settingsVisible">
+      <div class="settings">
+        <div class="row">
+          <label for="shift-hours">Długość zmiany w godzinach</label>
+          <input
+            type="number"
+            name="shift-hours"
+            min="1"
+            max="72"
+            :value="shiftHours"
+          />
+        </div>
+        <div class="row">
+          <label for="max-days-in-week">Max dni w ciągu tygodnia</label>
+          <input
+            type="number"
+            name="max-days-in-week"
+            min="1"
+            max="7"
+            :value="maxDaysInWeek"
+          />
+        </div>
+        <div class="row"><label for="enable-mondays">Włącz poniedziałki</label><Toggle v-model="enableMondays" name="enable-mondays"/></div>
+      </div>
+      <footer>
+        <span class="icon-clear" v-wave @click="settingsVisible = false"></span>
+        <span class="icon-save" v-wave @click="settingsVisible = false"></span>
+      </footer>
+    </div>
+  </transition>
 </template>
 
+<style src="@vueform/toggle/themes/default.css"></style>
 <style scoped>
 main {
   max-width: 330px;
@@ -217,9 +244,14 @@ footer span:not(:first-child) {
   justify-content: space-between;
   align-items: center;
   height: 40px;
+  border-bottom: solid 1px #cbd5e0;
+  border-top: solid 1px #cbd5e0;
 }
 
-.row {
+.settings-modal .row {
+  border: 0
+}
+.settings-modal .row:not(:last-child) {
   border-bottom: solid 1px #cbd5e0;
 }
 
@@ -255,5 +287,64 @@ input:focus {
   background-color: lightpink;
   border: 2px solid red;
   border-radius: 5px;
+}
+
+.overlay {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 2;
+  cursor: pointer;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.settings-modal {
+  position: fixed;
+  width: 100%;
+  height: 30%;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  background-color: #fff;
+}
+
+.settings-modal .settings {
+  max-width: 330px;
+  margin: 0 auto;
+  padding-top: 10px;
+}
+
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  transform: translateY(50px);
+  opacity: 0;
+}
+
+.toggle-container {
+  margin-right: 8px;
+}
+
+.vc-container {
+  --yellow-600: gold;
 }
 </style>
