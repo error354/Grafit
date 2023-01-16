@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import Toggle from '@vueform/toggle'
+import Toggle from "@vueform/toggle";
 
 const maxHours = ref(168);
 const shiftHours = ref(10);
 const maxDaysInWeek = ref(4);
-const enableMondays = ref(false)
+const enableMondays = ref(false);
 
 const hoursLeft = computed(() =>
   Math.max(0, maxHours.value - shiftHours.value * selected.value.length)
@@ -127,7 +127,7 @@ const settingsVisible = ref(false);
           name="max-hours"
           min="1"
           max="744"
-          :value="maxHours"
+          v-model="maxHours"
         />
       </div>
     </div>
@@ -138,6 +138,7 @@ const settingsVisible = ref(false);
       :attributes="attributes"
       :min-date="minDate"
       :max-date="maxDate"
+      :disabled-dates="enableMondays ? null : { weekdays: [2] }"
       @dayclick="onDayClick"
       color="yellow"
       is-expanded
@@ -169,7 +170,7 @@ const settingsVisible = ref(false);
             name="shift-hours"
             min="1"
             max="72"
-            :value="shiftHours"
+            v-model="shiftHours"
           />
         </div>
         <div class="row">
@@ -179,10 +180,13 @@ const settingsVisible = ref(false);
             name="max-days-in-week"
             min="1"
             max="7"
-            :value="maxDaysInWeek"
+            v-model="maxDaysInWeek"
           />
         </div>
-        <div class="row"><label for="enable-mondays">Włącz poniedziałki</label><Toggle v-model="enableMondays" name="enable-mondays"/></div>
+        <div class="row">
+          <label for="enable-mondays">Włącz poniedziałki</label
+          ><Toggle v-model="enableMondays" name="enable-mondays" />
+        </div>
       </div>
       <footer>
         <span class="icon-clear" v-wave @click="settingsVisible = false"></span>
@@ -249,7 +253,7 @@ footer span:not(:first-child) {
 }
 
 .settings-modal .row {
-  border: 0
+  border: 0;
 }
 .settings-modal .row:not(:last-child) {
   border-bottom: solid 1px #cbd5e0;
