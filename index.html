@@ -3,11 +3,38 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" href="./src/assets/icons/favicon.ico" />
+    <link rel="manifest" href="./manifest.json" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Grafikator</title>
   </head>
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.ts"></script>
+    <script>
+      function registerServiceWorker() {
+        if ("serviceWorker" in navigator) {
+          window.addEventListener("load", function () {
+            // 3. Zarejestruj SW zdefiniowany w pliku znajdującym się w katalogu
+            navigator.serviceWorker
+              .register("serviceWorker.js")
+              // 4. Jeśli rejestracja się powiodła to wyświetl komunikat sukcesu
+              .then(
+                function (registration) {
+                  console.log(
+                    "ServiceWorker registration successful with scope: ",
+                    registration.scope
+                  );
+                },
+                function (err) {
+                  // 5. Jeśli rejestracja się nie powiodła to wyświetl komunikat błędu
+                  console.log("ServiceWorker registration failed: ", err);
+                }
+              );
+          });
+        }
+      }
+
+      registerServiceWorker();
+    </script>
   </body>
 </html>
