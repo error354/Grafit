@@ -6,6 +6,7 @@ interface Settings {
   shiftHours: number;
   maxDaysInWeek: number;
   enableMondays: boolean;
+  darkTheme: boolean;
 }
 
 const props = defineProps<Settings>();
@@ -18,6 +19,7 @@ const emit = defineEmits<{
 const newShiftHours = ref(props.shiftHours);
 const newMaxDaysInWeek = ref(props.maxDaysInWeek);
 const newEnableMondays = ref(props.enableMondays);
+const darkTheme = ref(props.darkTheme);
 
 const cancel = () => {
   emit("cancel");
@@ -31,13 +33,14 @@ const save = () => {
     shiftHours: newShiftHours.value,
     maxDaysInWeek: newMaxDaysInWeek.value,
     enableMondays: newEnableMondays.value,
+    darkTheme: darkTheme.value,
   };
   emit("save", value);
 };
 </script>
 
 <template>
-  <div class="settings-modal">
+  <div class="modal settings-modal">
     <div class="settings">
       <div class="row">
         <label for="shift-hours">Długość zmiany w godzinach</label>
@@ -63,6 +66,10 @@ const save = () => {
         <label for="enable-mondays">Włącz poniedziałki</label
         ><Toggle v-model="newEnableMondays" name="enable-mondays" />
       </div>
+      <div class="row">
+        <label for="dark-theme">Tryb ciemny</label
+        ><Toggle v-model="darkTheme" name="dark-theme" />
+      </div>
     </div>
     <footer>
       <span class="icon-clear" v-wave @click="cancel"></span>
@@ -75,12 +82,11 @@ const save = () => {
 .settings-modal {
   position: fixed;
   width: 100%;
-  height: 30%;
+  height: 225px;
   left: 0;
   right: 0;
   bottom: 0;
   z-index: 3;
-  background-color: #fff;
 }
 
 .settings-modal .settings {
@@ -93,7 +99,7 @@ const save = () => {
   border: 0;
 }
 .settings-modal .row:not(:last-child) {
-  border-bottom: solid 1px #cbd5e0;
+  border-bottom: solid 1px var(--borders-color);
 }
 
 .toggle-container {

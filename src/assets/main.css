@@ -10,9 +10,33 @@ b {
 }
 
 :root {
-  --toggle-bg-on: gold;
-  --toggle-border-on: gold;
+  --accent-color: #ffcc00ff;
+  --toggle-bg-on: var(--accent-color);
+  --toggle-border-on: var(--accent-color);
   --toggle-ring-width: 0;
+  --background-color: #fff;
+  --text-color: #1a202c;
+  --borders-color: #cbd5e0;
+}
+
+:root.dark {
+  --background-color: #1a202c;
+  --text-color: #eee;
+  --borders-color: #899199;
+  --toggle-bg-off: #55595e !important;
+  --toggle-handle-enabled: #899199 !important;
+  --toggle-border-off: #899199 !important;
+}
+
+:root.dark input {
+  background-color: #899199;
+}
+
+body,
+footer,
+.modal {
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 footer {
@@ -26,7 +50,7 @@ footer {
   justify-content: space-around;
   align-items: stretch;
   align-content: stretch;
-  border-top: 1px solid #cbd5e0;
+  border-top: 1px solid var(--borders-color);
   font-size: 30px;
 }
 
@@ -40,7 +64,7 @@ footer span {
 }
 
 footer span:not(:first-child) {
-  border-left: 1px solid #cbd5e0;
+  border-left: 1px solid var(--borders-color);
 }
 
 .settings {
@@ -55,8 +79,8 @@ footer span:not(:first-child) {
   justify-content: space-between;
   align-items: center;
   height: 40px;
-  border-bottom: solid 1px #cbd5e0;
-  border-top: solid 1px #cbd5e0;
+  border-bottom: solid 1px var(--borders-color);
+  border-top: solid 1px var(--borders-color);
 }
 
 .settings input {
@@ -67,10 +91,10 @@ footer span:not(:first-child) {
 
 input {
   border-radius: 5px;
-  border: 1px solid #cbd5e0;
+  border: 1px solid var(--borders-color);
 }
 
 input:focus {
-  border: 1px solid gold;
-  outline: 1px solid gold;
+  border: 1px solid var(--accent-color);
+  outline: 1px solid var(--accent-color);
 }

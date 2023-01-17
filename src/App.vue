@@ -137,7 +137,55 @@ const saveSettings = (newSettings: any) => {
   enableMondays.value = newSettings.enableMondays;
   saveToLocalStorage("enableMondays", newSettings.enableMondays);
   settingsVisible.value = false;
+  if (newSettings.darkTheme) {
+    setTheme("dark");
+  } else {
+    setTheme("light");
+  }
 };
+
+/**LIGHT/DARK THEME */
+const userTheme = ref("light");
+
+const darkTheme = computed(() => {
+  if (userTheme.value === "dark") {
+    return true;
+  }
+  return false;
+});
+
+const setTheme = (theme: string) => {
+  saveToLocalStorage("user-theme", theme);
+  userTheme.value = theme;
+  document.documentElement.className = theme;
+};
+
+const toggleTheme = () => {
+  const activeTheme = getFromLocalStorage("user-theme");
+  if (activeTheme === "light") {
+    setTheme("dark");
+  } else {
+    setTheme("light");
+  }
+};
+
+const getMediaPreference = () => {
+  const hasDarkPreference = window.matchMedia(
+    "(prefers-color-scheme: dark)"
+  ).matches;
+  if (hasDarkPreference) {
+    return "dark";
+  } else {
+    return "light";
+  }
+};
+
+const getTheme = () => {
+  return getFromLocalStorage("user-theme");
+};
+
+const initUserTheme = getTheme() || getMediaPreference();
+setTheme(initUserTheme);
 </script>
 
 <template>
@@ -164,9 +212,12 @@ const saveSettings = (newSettings: any) => {
       :min-date="minDate"
       :max-date="maxDate"
       :disabled-dates="enableMondays ? null : { weekdays: [2] }"
+      first-day-of-week="2"
+      locale="pl"
       @dayclick="onDayClick"
       color="yellow"
       is-expanded
+      :is-dark="userTheme === 'dark' ? true : false"
     />
     <div class="warnings">
       <div class="warning" v-for="warning in warnings" v-bind:key="warning.id">
@@ -190,6 +241,7 @@ const saveSettings = (newSettings: any) => {
       :shiftHours="shiftHours"
       :maxDaysInWeek="maxDaysInWeek"
       :enableMondays="enableMondays"
+      :darkTheme="darkTheme"
       v-show="settingsVisible"
       @save="saveSettings"
       @cancel="settingsVisible = false"
@@ -262,6 +314,6 @@ main {
 }
 
 .vc-container {
-  --yellow-600: gold;
+  --yellow-600: var(--accent-color);
 }
 </style>
