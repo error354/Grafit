@@ -2,6 +2,7 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import VCalendar from "v-calendar";
 import VWave from "v-wave";
+import "./registerServiceWorker";
 
 import "./assets/main.css";
 import "./assets/icons.css";

@@ -130,7 +130,6 @@ const resetSelected = () => {
 const settingsVisible = ref(false);
 
 const saveSettings = (newSettings: any) => {
-  console.log(newSettings);
   shiftHours.value = newSettings.shiftHours;
   saveToLocalStorage("shiftHours", newSettings.shiftHours);
   maxDaysInWeek.value = newSettings.maxDaysInWeek;
