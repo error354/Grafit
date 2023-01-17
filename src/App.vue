@@ -1,11 +1,21 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import Toggle from "@vueform/toggle";
+import SettingsModal from "./components/SettingsModal.vue";
 
-const maxHours = ref(168);
-const shiftHours = ref(10);
-const maxDaysInWeek = ref(4);
-const enableMondays = ref(false);
+const saveToLocalStorage = (key: string, data: any) => {
+  localStorage.setItem(key, JSON.stringify(data));
+};
+
+const getFromLocalStorage = (key: string) => {
+  return JSON.parse(localStorage.getItem(key) as string);
+};
+
+const maxHours = ref<number>(getFromLocalStorage("maxHours") || 168);
+const shiftHours = ref<number>(getFromLocalStorage("shiftHours") || 10);
+const maxDaysInWeek = ref<number>(getFromLocalStorage("maxDaysInWeek") || 4);
+const enableMondays = ref<boolean>(
+  getFromLocalStorage("enableMondays") || false
+);
 
 const hoursLeft = computed(() =>
   Math.max(0, maxHours.value - shiftHours.value * selected.value.length)
@@ -28,6 +38,10 @@ const attributes = computed(() =>
     dates: date,
   }))
 );
+
+const saveMaxHours = () => {
+  saveToLocalStorage("maxHours", maxHours.value);
+};
 
 const warnings = ref<Array<Warning>>([]);
 
@@ -114,11 +128,22 @@ const resetSelected = () => {
 };
 
 const settingsVisible = ref(false);
+
+const saveSettings = (newSettings: any) => {
+  console.log(newSettings);
+  shiftHours.value = newSettings.shiftHours;
+  saveToLocalStorage("shiftHours", newSettings.shiftHours);
+  maxDaysInWeek.value = newSettings.maxDaysInWeek;
+  saveToLocalStorage("maxDaysInWeek", newSettings.maxDaysInWeek);
+  enableMondays.value = newSettings.enableMondays;
+  saveToLocalStorage("enableMondays", newSettings.enableMondays);
+  settingsVisible.value = false;
+};
 </script>
 
 <template>
   <main>
-    <h2>Grafikator v0.2 alpha</h2>
+    <h2>Grafikator v0.3 alpha</h2>
     <div class="settings">
       <div class="row">
         <label for="max-hours">Godzin pracujących w miesiącu</label>
@@ -128,6 +153,7 @@ const settingsVisible = ref(false);
           min="1"
           max="744"
           v-model="maxHours"
+          @change="saveMaxHours"
         />
       </div>
     </div>
@@ -161,38 +187,14 @@ const settingsVisible = ref(false);
     ></div>
   </transition>
   <transition name="slide-fade">
-    <div class="settings-modal" v-show="settingsVisible">
-      <div class="settings">
-        <div class="row">
-          <label for="shift-hours">Długość zmiany w godzinach</label>
-          <input
-            type="number"
-            name="shift-hours"
-            min="1"
-            max="72"
-            v-model="shiftHours"
-          />
-        </div>
-        <div class="row">
-          <label for="max-days-in-week">Max dni w ciągu tygodnia</label>
-          <input
-            type="number"
-            name="max-days-in-week"
-            min="1"
-            max="7"
-            v-model="maxDaysInWeek"
-          />
-        </div>
-        <div class="row">
-          <label for="enable-mondays">Włącz poniedziałki</label
-          ><Toggle v-model="enableMondays" name="enable-mondays" />
-        </div>
-      </div>
-      <footer>
-        <span class="icon-clear" v-wave @click="settingsVisible = false"></span>
-        <span class="icon-save" v-wave @click="settingsVisible = false"></span>
-      </footer>
-    </div>
+    <SettingsModal
+      :shiftHours="shiftHours"
+      :maxDaysInWeek="maxDaysInWeek"
+      :enableMondays="enableMondays"
+      v-show="settingsVisible"
+      @save="saveSettings"
+      @cancel="settingsVisible = false"
+    />
   </transition>
 </template>
 
@@ -206,73 +208,6 @@ main {
   flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: center;
-}
-
-footer {
-  width: 100%;
-  height: 50px;
-  position: fixed;
-  bottom: 0;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-around;
-  align-items: stretch;
-  align-content: stretch;
-  border-top: 1px solid #cbd5e0;
-  font-size: 30px;
-}
-
-footer span {
-  display: block;
-  flex: 1;
-  height: 100%;
-  line-height: 50px;
-  text-align: center;
-  cursor: pointer;
-}
-
-footer span:not(:first-child) {
-  border-left: 1px solid #cbd5e0;
-}
-
-.settings {
-  width: 100%;
-  margin: 5px 0 10px 0;
-}
-
-.row {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: space-between;
-  align-items: center;
-  height: 40px;
-  border-bottom: solid 1px #cbd5e0;
-  border-top: solid 1px #cbd5e0;
-}
-
-.settings-modal .row {
-  border: 0;
-}
-.settings-modal .row:not(:last-child) {
-  border-bottom: solid 1px #cbd5e0;
-}
-
-.settings input {
-  width: 70px;
-  height: 25px;
-  padding: 5px;
-}
-
-input {
-  border-radius: 5px;
-  border: 1px solid #cbd5e0;
-}
-
-input:focus {
-  border: 1px solid gold;
-  outline: 1px solid gold;
 }
 
 .hours-left {
@@ -316,23 +251,6 @@ input:focus {
   opacity: 0;
 }
 
-.settings-modal {
-  position: fixed;
-  width: 100%;
-  height: 30%;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 3;
-  background-color: #fff;
-}
-
-.settings-modal .settings {
-  max-width: 330px;
-  margin: 0 auto;
-  padding-top: 10px;
-}
-
 .slide-fade-enter-active,
 .slide-fade-leave-active {
   transition: all 0.3s ease-out;
@@ -342,10 +260,6 @@ input:focus {
 .slide-fade-leave-to {
   transform: translateY(100%);
   opacity: 0.7;
-}
-
-.toggle-container {
-  margin-right: 10px;
 }
 
 .vc-container {
