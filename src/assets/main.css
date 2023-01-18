@@ -98,3 +98,7 @@ input:focus {
   border: 1px solid var(--accent-color);
   outline: 1px solid var(--accent-color);
 }
+
+.vc-day-content {
+  --white: #1a202c;
+}

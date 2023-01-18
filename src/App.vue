@@ -197,7 +197,7 @@ setTheme(initUserTheme);
 
 <template>
   <main>
-    <h2>Grafit v1.0.0</h2>
+    <h2>Grafit v1.0.2</h2>
     <div class="settings">
       <div class="row">
         <label for="max-hours">Godzin pracujących w miesiącu</label>
