@@ -16,23 +16,24 @@ const emit = defineEmits<{
   (e: "save", value: Settings): void;
 }>();
 
-const newShiftHours = ref(props.shiftHours);
-const newMaxDaysInWeek = ref(props.maxDaysInWeek);
-const newEnableMondays = ref(props.enableMondays);
+const shiftHours = ref(props.shiftHours);
+const maxDaysInWeek = ref(props.maxDaysInWeek);
+const enableMondays = ref(props.enableMondays);
 const darkTheme = ref(props.darkTheme);
 
 const cancel = () => {
   emit("cancel");
-  newShiftHours.value = props.shiftHours;
-  newMaxDaysInWeek.value = props.maxDaysInWeek;
-  newEnableMondays.value = props.enableMondays;
+  shiftHours.value = props.shiftHours;
+  maxDaysInWeek.value = props.maxDaysInWeek;
+  enableMondays.value = props.enableMondays;
+  darkTheme.value = props.darkTheme;
 };
 
 const save = () => {
   const value = {
-    shiftHours: newShiftHours.value,
-    maxDaysInWeek: newMaxDaysInWeek.value,
-    enableMondays: newEnableMondays.value,
+    shiftHours: shiftHours.value,
+    maxDaysInWeek: maxDaysInWeek.value,
+    enableMondays: enableMondays.value,
     darkTheme: darkTheme.value,
   };
   emit("save", value);
@@ -49,7 +50,7 @@ const save = () => {
           name="shift-hours"
           min="1"
           max="72"
-          v-model="newShiftHours"
+          v-model="shiftHours"
         />
       </div>
       <div class="row">
@@ -59,12 +60,12 @@ const save = () => {
           name="max-days-in-week"
           min="1"
           max="7"
-          v-model="newMaxDaysInWeek"
+          v-model="maxDaysInWeek"
         />
       </div>
       <div class="row">
         <label for="enable-mondays">Włącz poniedziałki</label
-        ><Toggle v-model="newEnableMondays" name="enable-mondays" />
+        ><Toggle v-model="enableMondays" name="enable-mondays" />
       </div>
       <div class="row">
         <label for="dark-theme">Tryb ciemny</label
