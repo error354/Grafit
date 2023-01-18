@@ -88,7 +88,14 @@ const removeWarning = (warningId: string) => {
   warnings.value = warnings.value.filter((warning) => warning.id != warningId);
 };
 
-const onDayClick = (day: Day) => {
+interface CalendarDay extends Day {
+  isDisabled: boolean;
+}
+
+const onDayClick = (day: CalendarDay) => {
+  if (day.isDisabled) {
+    return false;
+  }
   const idx = selected.value.findIndex((d) => d.id === day.id);
   if (idx >= 0) {
     selected.value.splice(idx, 1);
