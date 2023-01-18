@@ -1,6 +1,6 @@
 {
-  "name": "grafikator",
-  "version": "0.3.0",
+  "name": "grafit",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -43,7 +43,7 @@
   "vue": {
     "pwa": {
       "workboxPluginMode": "GenerateSW",
-      "name": "Grafikator",
+      "name": "Grafit",
       "themeColor": "#ffcc00ff",
       "msTileColor": "#ffcc00ff",
       "iconPaths": {

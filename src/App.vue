@@ -190,7 +190,7 @@ setTheme(initUserTheme);
 
 <template>
   <main>
-    <h2>Grafikator v0.3 alpha</h2>
+    <h2>Grafit v1.0.0</h2>
     <div class="settings">
       <div class="row">
         <label for="max-hours">Godzin pracujących w miesiącu</label>
@@ -212,7 +212,7 @@ setTheme(initUserTheme);
       :min-date="minDate"
       :max-date="maxDate"
       :disabled-dates="enableMondays ? null : { weekdays: [2] }"
-      first-day-of-week="2"
+      :first-day-of-week="2"
       locale="pl"
       @dayclick="onDayClick"
       color="yellow"
