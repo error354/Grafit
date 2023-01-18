@@ -115,10 +115,10 @@ const onDayClick = (day: Day) => {
 };
 
 const calcDaysInWeek = (day: Day) => {
-  const weekLater = new Date().setDate(day.date.getDate() + 6);
+  const weekLater = day.date.valueOf() + 518400000;
   const daysBetween = selected.value.filter(
     (s) =>
-      s.date.valueOf() >= day.date.valueOf() && s.date.valueOf() < weekLater
+      s.date.valueOf() >= day.date.valueOf() && s.date.valueOf() <= weekLater
   );
   return (daysBetween as Array<Day>).length;
 };
