@@ -1,5 +1,5 @@
 module.exports = {
-  publicPath: process.env.NODE_ENV === "production" ? "/grafit/" : "/",
+  publicPath: process.env.NODE_ENV === "production" ? "/Grafit/" : "/",
   pwa: {
     workboxPluginMode: "GenerateSW",
     name: "Grafit",
