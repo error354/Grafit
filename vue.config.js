@@ -16,7 +16,7 @@ module.exports = {
     manifestOptions: {
       lang: "PL",
       categories: ["productivity", "work", "job", "planning"],
-      display: "fullscreen",
+      display: "standalone",
       description: "An application supporting the planning of shift schedules",
       icons: [
         {
