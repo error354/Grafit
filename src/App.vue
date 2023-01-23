@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import SettingsModal from "./components/SettingsModal.vue";
+import html2canvas from "html2canvas";
 
 const saveToLocalStorage = (key: string, data: any) => {
   localStorage.setItem(key, JSON.stringify(data));
@@ -193,11 +194,52 @@ const getTheme = () => {
 
 const initUserTheme = getTheme() || getMediaPreference();
 setTheme(initUserTheme);
+
+const calendar = ref(null);
+
+const getVisibleMonth = () => {
+  const titleElement: HTMLElement | null = document.querySelector(".vc-title");
+  const titleText = (titleElement as HTMLElement).textContent;
+  const splited = (titleText as string).split(" 2");
+  const monthName = splited[0];
+  return monthName;
+};
+
+const takeScreenshot = async () => {
+  const calendarElement: HTMLElement | null =
+    document.querySelector(".vc-container");
+  const screenshotBase64 = (
+    await html2canvas(calendarElement as HTMLElement)
+  ).toDataURL();
+  return screenshotBase64;
+};
+
+const saveScreenshot = async () => {
+  const screenshotBase64 = await takeScreenshot();
+  const a = document.createElement("a");
+  a.href = screenshotBase64;
+  a.download = `${getVisibleMonth()}.png`;
+  a.click();
+  a.remove();
+};
+
+const shareScreenshot = async () => {
+  const screenshotBase64 = await takeScreenshot();
+  const blob = await (await fetch(screenshotBase64)).blob();
+  const file = new File([blob], `${getVisibleMonth()}.png`, {
+    type: blob.type,
+  });
+  navigator.share({
+    title: "Grafik",
+    text: "To jest moja propozycja grafiku na następny miesiąc",
+    files: [file],
+  });
+};
 </script>
 
 <template>
   <main>
-    <h2>Grafit v1.0.2</h2>
+    <h2>Grafit v1.0.5</h2>
     <div class="settings">
       <div class="row">
         <label for="max-hours">Godzin pracujących w miesiącu</label>
@@ -215,6 +257,7 @@ setTheme(initUserTheme);
       >Do zaplanowania pozostało <b>{{ hoursLeft }}</b> godzin.</span
     >
     <v-calendar
+      ref="calendar"
       :attributes="attributes"
       :min-date="minDate"
       :max-date="maxDate"
@@ -233,6 +276,12 @@ setTheme(initUserTheme);
     </div>
     <footer>
       <span class="icon-settings" v-wave @click="settingsVisible = true"></span>
+      <span
+        class="icon-photo_size_select_large"
+        v-wave
+        @click="saveScreenshot"
+      ></span>
+      <span class="icon-share" v-wave @click="shareScreenshot"></span>
       <span class="icon-refresh" v-wave @click="resetSelected"></span>
     </footer>
   </main>
