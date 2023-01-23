@@ -1,6 +1,9 @@
 module.exports = {
   publicPath: process.env.NODE_ENV === "production" ? "/Grafit/" : "/",
   pwa: {
+    workboxOptions: {
+      skipWaiting: true,
+    },
     workboxPluginMode: "GenerateSW",
     name: "Grafit",
     themeColor: "#ffcc00ff",
