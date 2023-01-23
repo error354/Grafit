@@ -3,7 +3,7 @@ import { ref, computed } from "vue";
 import SettingsModal from "./components/SettingsModal.vue";
 import html2canvas from "html2canvas";
 
-const saveToLocalStorage = (key: string, data: any) => {
+const saveToLocalStorage = (key: string, data: unknown) => {
   localStorage.setItem(key, JSON.stringify(data));
 };
 
@@ -24,7 +24,7 @@ const hoursLeft = computed(() =>
 
 interface Day {
   id: string;
-  date: any;
+  date: Date;
 }
 interface Warning {
   id: string;
@@ -137,19 +137,26 @@ const resetSelected = () => {
 
 const settingsVisible = ref(false);
 
-const saveSettings = (newSettings: any) => {
+interface Settings {
+  shiftHours: number;
+  maxDaysInWeek: number;
+  enableMondays: boolean;
+  darkTheme: boolean;
+}
+
+const saveSettings = (newSettings: Settings) => {
   shiftHours.value = newSettings.shiftHours;
   saveToLocalStorage("shiftHours", newSettings.shiftHours);
   maxDaysInWeek.value = newSettings.maxDaysInWeek;
   saveToLocalStorage("maxDaysInWeek", newSettings.maxDaysInWeek);
   enableMondays.value = newSettings.enableMondays;
   saveToLocalStorage("enableMondays", newSettings.enableMondays);
-  settingsVisible.value = false;
   if (newSettings.darkTheme) {
     setTheme("dark");
   } else {
     setTheme("light");
   }
+  settingsVisible.value = false;
 };
 
 /* LIGHT/DARK THEME */
@@ -166,15 +173,6 @@ const setTheme = (theme: string) => {
   saveToLocalStorage("user-theme", theme);
   userTheme.value = theme;
   document.documentElement.className = theme;
-};
-
-const toggleTheme = () => {
-  const activeTheme = getFromLocalStorage("user-theme");
-  if (activeTheme === "light") {
-    setTheme("dark");
-  } else {
-    setTheme("light");
-  }
 };
 
 const getMediaPreference = () => {
