@@ -52,7 +52,7 @@ const addWarning = (warningId: string) => {
       case "MAX_DAYS_EXCEEDED":
         warnings.value.push({
           id: "MAX_DAYS_EXCEEDED",
-          message: `Wybrano więcej niż ${maxDaysInWeek.value} dni w ciągu tygodnia`,
+          message: `Wybrano więcej niż ${maxDaysInWeek.value} dni w ciągu tygodnia.`,
         });
         break;
       default:
@@ -333,6 +333,7 @@ main {
   background-color: lightpink;
   border: 2px solid red;
   border-radius: 5px;
+  color: #1a202c;
 }
 
 .overlay {
