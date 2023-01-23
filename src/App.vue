@@ -152,7 +152,7 @@ const saveSettings = (newSettings: any) => {
   }
 };
 
-/**LIGHT/DARK THEME */
+/* LIGHT/DARK THEME */
 const userTheme = ref("light");
 
 const darkTheme = computed(() => {
@@ -195,6 +195,8 @@ const getTheme = () => {
 const initUserTheme = getTheme() || getMediaPreference();
 setTheme(initUserTheme);
 
+/* SCREENSHOTS */
+
 const calendar = ref(null);
 
 const getVisibleMonth = () => {
@@ -231,7 +233,7 @@ const shareScreenshot = async () => {
   });
   navigator.share({
     title: "Grafik",
-    text: "To jest moja propozycja grafiku na następny miesiąc",
+    text: `To jest moja propozycja grafiku na ${getVisibleMonth()}`,
     files: [file],
   });
 };
